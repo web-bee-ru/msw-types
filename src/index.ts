@@ -1,1 +1,1 @@
-export * from "./TypedHttp";
+export * from "./TypedRest";
