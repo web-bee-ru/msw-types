@@ -1,12 +1,12 @@
 {
     "compilerOptions": {
-      "module": "commonjs",
+      "module": "CommonJS",
       "declaration": true,
       "removeComments": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "allowSyntheticDefaultImports": true,
-      "target": "ES2021",
+      "target": "ES6",
       "sourceMap": true,
       "outDir": "./dist",
       "baseUrl": "./",
@@ -14,6 +14,7 @@
         "src/*": ["src/*"],
       },
       "strict": true,
+      "esModuleInterop": true,
       "incremental": true,
       "skipLibCheck": true,
       "strictNullChecks": true,
@@ -29,4 +30,4 @@
       "noFallthroughCasesInSwitch": true,
       "noUnusedParameters": false,
     },
-  }
+}
