@@ -1,7 +1,11 @@
 {
-  "name": "msw-types",
+  "name": "@web-bee-ru/msw-types",
   "version": "0.1.0",
   "description": "",
+  "private": false,
+  "keywords": ["msw"],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "commonjs",
   "scripts": {
     "start": "node ./dist/index.js",
