@@ -76,7 +76,13 @@ export class TypedHttp<T extends Scheme> {
    * Обертка над обработчиком, чтобы прокинуть query в объект HttpRequest
    */
   private prepareHandler<M extends Method, K extends Routes<T, M>>(handler: HandlerType<T, M, K>) {
-    return ({ request, params }: { request: StrictRequest<DefaultBodyType>; params: unknown }) => {
+    return ({
+      request,
+      params,
+    }: {
+      request: StrictRequest<DefaultBodyType>;
+      params: PathParams;
+    }) => {
       const reqWithQuery = request as ReqType<T, M, K>;
       const newParams = params as Params<T, M, K>;
       const url = new URL(request.url);

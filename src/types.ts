@@ -1,4 +1,4 @@
-import { DefaultBodyType, HttpResponse, StrictRequest } from "msw";
+import { DefaultBodyType, HttpResponse, PathParams, StrictRequest } from "msw";
 import { ConditionalPick } from "type-fest";
 
 export type Method = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "OPTIONS" | "PATCH";
@@ -72,5 +72,5 @@ export type HandlerType<T extends Scheme, M extends Method, K extends Routes<T, 
   params,
 }: {
   request: ReqType<T, M, K>;
-  params: unknown;
+  params: PathParams;
 }) => HttpResponse | Promise<HttpResponse>;

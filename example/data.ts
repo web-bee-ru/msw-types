@@ -24,7 +24,7 @@ export interface TestApi {
           id2: string;
         };
         response: {
-          id2: "string";
+          id2: string;
           data2: object;
         };
       };
@@ -38,7 +38,7 @@ export interface TestApi {
           id3: string;
         };
         response: {
-          id3: "string";
+          id3: string;
           data3: object;
         };
       };
