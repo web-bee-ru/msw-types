@@ -12,7 +12,7 @@ import {
 import qs from "qs";
 import { HttpRequestResolverExtras } from "msw/lib/core/handlers/HttpHandler";
 
-export class TypedHttpOpenApi<Scheme extends SchemeType> {
+export class TypedOpenApiHttp<Scheme extends SchemeType> {
   private http: typeof http;
   private readonly baseURL?: string;
 

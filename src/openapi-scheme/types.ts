@@ -9,7 +9,7 @@ export type BodyContentType = "multipart/form-data" | "application/json";
  * @description Тип openapi схемы с полями, необходимыми для request и parameters в msw
  */
 export type SchemeType = {
-  [route: string]: {
+  [route in keyof object]: {
     [method in MethodType]?: {
       parameters: {
         query?: {
@@ -57,39 +57,49 @@ export type RoutesType<
 > = keyof ConditionalPick<Scheme, Partial<Record<Method, unknown>>>;
 
 /**
- * @description Проверяет наличие поля. Если есть, то выбирает его. Any используется, так как в поле может быть любым из parameters, requestBody, responses
+ * @description Если method является ключем Scheme[Route], то тогда проверяет наличие поля. Если есть, то выбирает его. Any используется, так как в поле может быть любым из parameters, requestBody, responses
  */
 export type CurrentFieldType<
   Scheme extends SchemeType,
   Method extends MethodType,
   Route extends RoutesType<Scheme, Method>,
   Field extends FieldType,
-> = Required<Scheme[Route]>[Method] extends Partial<Record<Field, any>>
-  ? Required<Required<Scheme[Route]>[Method]>[Field]
+> = Method extends keyof Scheme[Route]
+  ? Required<Scheme[Route]>[Method] extends Partial<Record<Field, any>>
+    ? Required<Required<Scheme[Route]>[Method]>[Field]
+    : never
   : never;
 
 /**
- * @description Проверяет наличие query. Если есть, то берет его
+ * @description Если method является ключем Scheme[Route], то проверяет наличие query. Если query есть и является ключем, то берет его
  */
 export type QueryParamsFieldType<
   Scheme extends SchemeType,
   Method extends MethodType,
   Route extends RoutesType<Scheme, Method>,
   Field extends CurrentFieldType<Scheme, Method, Route, "parameters">,
-> = Required<Scheme[Route][Method]>[Field] extends Partial<Record<"query", object>>
-  ? Required<Required<Scheme[Route]>[Method]>[Field]["query"]
+> = Method extends keyof Scheme[Route]
+  ? Required<Scheme[Route][Method]>[Field] extends Partial<Record<"query", object>>
+    ? "query" extends keyof Scheme[Route][Method][Field]
+      ? Required<Required<Scheme[Route]>[Method]>[Field]["query"]
+      : never
+    : never
   : never;
 
 /**
- * @description Проверяет наличие path. Если есть, то берет его
+ * @description Если method является ключем Scheme[Route], то проверяет наличие path. Если query path и является ключем, то берет его
  */
 export type ParamsFieldType<
   Scheme extends SchemeType,
   Method extends MethodType,
   Route extends RoutesType<Scheme, Method>,
   Field extends CurrentFieldType<Scheme, Method, Route, "parameters">,
-> = Required<Scheme[Route][Method]>[Field] extends Partial<Record<"path", object>>
-  ? Required<Required<Scheme[Route]>[Method]>[Field]["path"]
+> = Method extends keyof Scheme[Route]
+  ? Required<Scheme[Route][Method]>[Field] extends Partial<Record<"path", object>>
+    ? "path" extends keyof Scheme[Route][Method][Field]
+      ? Required<Required<Scheme[Route]>[Method]>[Field]["path"]
+      : never
+    : never
   : never;
 
 /**
@@ -145,9 +155,7 @@ export interface HttpRequestWithQuery<
   Query = Required<QueryParamsType<Scheme, Method, Route, Field>>,
 > extends StrictRequest<BodyType> {
   query: {
-    [Key in keyof Query]:
-      | (QueryParamsType<Scheme, Method, Route, Field>[Key] extends undefined ? undefined : never)
-      | (Query[Key] extends unknown[] ? string[] : string);
+    [Key in keyof Query]: Query[Key] extends unknown[] ? string[] : string;
   };
 }
 

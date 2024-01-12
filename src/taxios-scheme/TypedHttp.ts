@@ -1,9 +1,17 @@
 import { DefaultBodyType, PathParams, ResponseResolver, StrictRequest, http } from "msw";
 import qs from "qs";
-import { FieldType, HandlerType, Method, Params, ReqType, Routes, Scheme } from "./types";
+import {
+  CurrentFieldType,
+  HandlerType,
+  MethodType,
+  ParamsType,
+  RequestType,
+  RoutesType,
+  SchemeType,
+} from "./types";
 import { HttpRequestResolverExtras } from "msw/lib/core/handlers/HttpHandler";
 
-export class TypedHttp<T extends Scheme> {
+export class TypedHttp<Scheme extends SchemeType> {
   private http: typeof http;
   private readonly baseURL?: string;
 
@@ -16,57 +24,78 @@ export class TypedHttp<T extends Scheme> {
     this.baseURL = baseURL;
   }
 
-  public get<K extends Routes<T, "GET">>(path: K, handler: HandlerType<T, "GET", K>) {
-    return this.http.get<never, FieldType<T, "GET", K, "response">>(
+  public get<Route extends RoutesType<Scheme, "GET">>(
+    path: Route,
+    handler: HandlerType<Scheme, "GET", Route>,
+  ) {
+    return this.http.get<never, CurrentFieldType<Scheme, "GET", Route, "response">>(
       this.preparePath(path as string),
       this.prepareHandler(handler),
     );
   }
 
-  public post<K extends Routes<T, "POST">>(path: K, handler: HandlerType<T, "POST", K>) {
-    return this.http.post<FieldType<T, "POST", K, "body">, FieldType<T, "POST", K, "response">>(
-      this.preparePath(path as string),
-      this.prepareHandler(handler),
-    );
+  public post<Route extends RoutesType<Scheme, "POST">>(
+    path: Route,
+    handler: HandlerType<Scheme, "POST", Route>,
+  ) {
+    return this.http.post<
+      CurrentFieldType<Scheme, "POST", Route, "body">,
+      CurrentFieldType<Scheme, "POST", Route, "response">
+    >(this.preparePath(path as string), this.prepareHandler(handler));
   }
 
-  public put<K extends Routes<T, "PUT">>(path: K, handler: HandlerType<T, "PUT", K>) {
-    return this.http.put<FieldType<T, "PUT", K, "body">, FieldType<T, "PUT", K, "response">>(
-      this.preparePath(path as string),
-      this.prepareHandler(handler),
-    );
+  public put<Route extends RoutesType<Scheme, "PUT">>(
+    path: Route,
+    handler: HandlerType<Scheme, "PUT", Route>,
+  ) {
+    return this.http.put<
+      CurrentFieldType<Scheme, "PUT", Route, "body">,
+      CurrentFieldType<Scheme, "PUT", Route, "response">
+    >(this.preparePath(path as string), this.prepareHandler(handler));
   }
 
-  public delete<K extends Routes<T, "DELETE">>(path: K, handler: HandlerType<T, "DELETE", K>) {
+  public delete<Route extends RoutesType<Scheme, "DELETE">>(
+    path: Route,
+    handler: HandlerType<Scheme, "DELETE", Route>,
+  ) {
     return this.http.delete<
-      FieldType<T, "DELETE", K, "body">,
-      FieldType<T, "DELETE", K, "response">
+      CurrentFieldType<Scheme, "DELETE", Route, "body">,
+      CurrentFieldType<Scheme, "DELETE", Route, "response">
     >(this.preparePath(path as string), this.prepareHandler(handler));
   }
 
-  public head<K extends Routes<T, "HEAD">>(path: K, handler: HandlerType<T, "HEAD", K>) {
-    return this.http.head<never, FieldType<T, "HEAD", K, "response">>(
+  public head<Route extends RoutesType<Scheme, "HEAD">>(
+    path: Route,
+    handler: HandlerType<Scheme, "HEAD", Route>,
+  ) {
+    return this.http.head<never, CurrentFieldType<Scheme, "HEAD", Route, "response">>(
       this.preparePath(path as string),
       this.prepareHandler(handler),
     );
   }
 
-  public patch<K extends Routes<T, "PATCH">>(path: K, handler: HandlerType<T, "PATCH", K>) {
-    return this.http.patch<FieldType<T, "PATCH", K, "body">, FieldType<T, "PATCH", K, "response">>(
-      this.preparePath(path as string),
-      this.prepareHandler(handler),
-    );
+  public patch<Route extends RoutesType<Scheme, "PATCH">>(
+    path: Route,
+    handler: HandlerType<Scheme, "PATCH", Route>,
+  ) {
+    return this.http.patch<
+      CurrentFieldType<Scheme, "PATCH", Route, "body">,
+      CurrentFieldType<Scheme, "PATCH", Route, "response">
+    >(this.preparePath(path as string), this.prepareHandler(handler));
   }
 
-  public options<K extends Routes<T, "OPTIONS">>(path: K, handler: HandlerType<T, "OPTIONS", K>) {
+  public options<Route extends RoutesType<Scheme, "OPTIONS">>(
+    path: Route,
+    handler: HandlerType<Scheme, "OPTIONS", Route>,
+  ) {
     return this.http.options<
-      FieldType<T, "OPTIONS", K, "body">,
-      FieldType<T, "OPTIONS", K, "response">
+      CurrentFieldType<Scheme, "OPTIONS", Route, "body">,
+      CurrentFieldType<Scheme, "OPTIONS", Route, "response">
     >(this.preparePath(path as string), this.prepareHandler(handler));
   }
 
-  public all<K extends keyof T["routes"]>(
-    path: K,
+  public all<Route extends keyof Scheme["routes"]>(
+    path: Route,
     handler: ResponseResolver<HttpRequestResolverExtras<PathParams>, DefaultBodyType, undefined>,
   ) {
     return this.http.all(this.preparePath(path as string), handler);
@@ -75,7 +104,9 @@ export class TypedHttp<T extends Scheme> {
   /**
    * Обертка над обработчиком, чтобы прокинуть query в объект HttpRequest
    */
-  private prepareHandler<M extends Method, K extends Routes<T, M>>(handler: HandlerType<T, M, K>) {
+  private prepareHandler<Method extends MethodType, Route extends RoutesType<Scheme, Method>>(
+    handler: HandlerType<Scheme, Method, Route>,
+  ) {
     return ({
       request,
       params,
@@ -83,8 +114,8 @@ export class TypedHttp<T extends Scheme> {
       request: StrictRequest<DefaultBodyType>;
       params: PathParams;
     }) => {
-      const reqWithQuery = request as ReqType<T, M, K>;
-      const newParams = params as Params<T, M, K>;
+      const reqWithQuery = request as RequestType<Scheme, Method, Route>;
+      const newParams = params as ParamsType<Scheme, Method, Route>;
       const url = new URL(request.url);
       const query = qs.parse(url.search, { ignoreQueryPrefix: true });
       reqWithQuery.query = query as typeof reqWithQuery.query;
