@@ -1,6 +1,6 @@
 /** Пример taxios схемы */
 
-export interface TAxiosTestApi {
+export interface TaxiosTestApi {
   version: "1";
   routes: {
     "/test1": {

@@ -1,8 +1,8 @@
 import { HttpResponse, http } from "msw";
 import { TypedHttp, TypedOpenApiHttp } from "src";
-import { TAxiosTestApi, TestOpenApi } from "./data";
+import { TaxiosTestApi, TestOpenApi } from "./data";
 
-const typedHttp = new TypedHttp<TAxiosTestApi>(http);
+const typedHttp = new TypedHttp<TaxiosTestApi>(http);
 typedHttp.get("/test1", async ({ request, params }) => {
   return HttpResponse.text("test");
 });

@@ -1,2 +1,2 @@
-export * from "./taxios-scheme/TypedHttp";
-export * from "./openapi-scheme/TypedOpenApiHttp";
+export * from "./taxios-schema/TypedHttp";
+export * from "./openapi-schema/TypedOpenApiHttp";

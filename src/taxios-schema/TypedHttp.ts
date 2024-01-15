@@ -16,7 +16,7 @@ export class TypedHttp<Scheme extends SchemeType> {
   private readonly baseURL?: string;
 
   /**
-   * @param _http Объект, который содержит набор обработчиков запросов, предназначенных для удобного имитации запросов REST API.
+   * @param _http Объект, который содержит набор обработчиков запросов, предназначенных для удобной имитации запросов REST API.
    * @param baseURL базовый URL, будет добавлен ко всем путям
    */
   constructor(_http: typeof http, baseURL?: string) {
