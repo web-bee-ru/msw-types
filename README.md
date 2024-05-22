@@ -3,7 +3,7 @@ Type your `msw` handlers with `taxios` scheme.
 # Install
 
 ```sh
-$ npm i
+$ npm i @web-bee-ru/msw-types
 ```
 
 # Usage
