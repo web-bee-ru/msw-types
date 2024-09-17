@@ -1,5 +1,2 @@
-export * from "./TypedHttp";
-
-export function parseArrayParam(param: string | string[]) {
-  return typeof param === 'string' ? param.split(',') : param;
-}
+export * from "./taxios-schema/TypedHttp";
+export * from "./openapi-schema/TypedOpenApiHttp";
