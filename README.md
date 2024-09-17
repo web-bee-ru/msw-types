@@ -27,6 +27,8 @@ typedHttp.get("/test1/{id}", async ({ request, params }) => {
 
 ### openapi-typescript
 
+**DEPRECATED**: Используйте [openapi-msw](https://www.npmjs.com/package/openapi-msw)
+
 ```typescript
 
 import { HttpResponse, http } from "msw";
