@@ -1,9 +1,11 @@
 {
   "name": "@web-bee-ru/msw-types",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "",
   "private": false,
-  "keywords": ["msw"],
+  "keywords": [
+    "msw"
+  ],
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "type": "commonjs",
@@ -14,7 +16,6 @@
     "build": "tsc --build",
     "prebuild": "tsc --build --clean",
     "lint": "eslint --ext .ts --fix"
-
   },
   "repository": {
     "type": "git",
